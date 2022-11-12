@@ -1,5 +1,6 @@
 package com.example.sns_project
 
+import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
