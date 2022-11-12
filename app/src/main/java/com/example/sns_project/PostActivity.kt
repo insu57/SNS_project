@@ -54,10 +54,10 @@ class PostActivity : AppCompatActivity() {
 
     private fun openGallery() {
         val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),
-            ActivityResultCallback {
-                binding.imageView.setImageURI(it)
-                photoUri= it
-            })
+        ActivityResultCallback {
+            binding.imageView.setImageURI(it)
+            photoUri= it
+        })
 
         loadImage.launch("image/*")
 
