@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,9 +14,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SNS_Project"
         tools:targetApi="31">
+
+        <activity
+            android:name=".PostActivity"
+            android:exported="false"
+            android:label="Post"
+            android:parentActivityName=".MainActivity"
+
+            >
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <activity
             android:name=".MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:label="Main">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -25,6 +42,16 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login"
+            android:parentActivityName=".MainActivity" />
+        <activity
+            android:name=".SignupActivity"
+            android:label="SignUp"
+            android:parentActivityName=".MainActivity" />
+
+
     </application>
 
 </manifest>
