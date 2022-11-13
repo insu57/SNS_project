@@ -19,11 +19,20 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class LoginActivity : AppCompatActivity(){
     var mGoogleSignInClient : GoogleSignInClient? = null
     lateinit var auth : FirebaseAuth
+
+
+    private val db: FirebaseFirestore = Firebase.firestore
+    private val userinfoCollectionRef = db.collection("userinfo")
+    private val hashMap: HashMap<String, Any> = HashMap()
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -47,11 +56,6 @@ class LoginActivity : AppCompatActivity(){
             .build()
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
-
-
-
-
-
 
 
 
@@ -87,15 +91,17 @@ class LoginActivity : AppCompatActivity(){
                 task -> if(task.isSuccessful){
                     val user = auth.currentUser
                 user?.let{
-                    val name = user.displayName // info
                     val email = user.email
-                    val displayName = user.displayName
-                    val photoUrl = user.photoUrl
-                    val emailVerified = user.isEmailVerified
-                    val uid = user.uid
-                    Log.d("xxxx name", name.toString())
-                    Log.d("xxxx email", email.toString())
-                    Log.d("xxxx displayName", displayName.toString())
+                    val name = user.displayName // info
+                    hashMap["Name"] = name.toString()
+                    if (email != null) {
+
+                            userinfoCollectionRef.document(email).set(hashMap)
+
+
+                    }
+
+
                 }
                 startActivity( Intent(this, MainActivity::class.java))
                 finish() //로그인 성공시 메인으로 이동
