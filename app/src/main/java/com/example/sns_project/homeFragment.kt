@@ -24,7 +24,6 @@ class homeFragment : Fragment(R.layout.fragment_home) {
         binding.button2.setOnClickListener{
             startActivity(Intent(activity,CommentActivity::class.java))
         }
-
         //DB에서 가져와서 리사이클러뷰에 표시
 
     }

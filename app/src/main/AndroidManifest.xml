@@ -15,21 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SNS_Project"
         tools:targetApi="31">
-
-        <activity
-            android:name=".PostActivity"
-            android:exported="false"
-            android:label="Post"
-            android:parentActivityName=".MainActivity"
-
-            >
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
-
         <activity
             android:name=".CommentActivity"
             android:exported="false">
@@ -37,29 +22,15 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".PostActivity"
             android:exported="false"
             android:label="Post"
-            android:parentActivityName=".MainActivity"
-            >
-
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
-        <activity
-            android:name=".UserActivity"
-            android:exported="false"
-            >
-
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -82,8 +53,6 @@
             android:name=".SignupActivity"
             android:label="SignUp"
             android:parentActivityName=".MainActivity" />
-
-
     </application>
 
 </manifest>
