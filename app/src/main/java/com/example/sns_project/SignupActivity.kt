@@ -1,6 +1,5 @@
 package com.example.sns_project
 
-import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -36,7 +35,16 @@ class SignupActivity: AppCompatActivity() {
     }
 
     private fun doSignup(userName: String,userMail: String, userPass: String){
-        hashMap["Name"] = userName
+        var input : ArrayList<String> = arrayListOf()
+        val hashMap = hashMapOf(
+            "Name" to userName,
+            "friend" to 0,
+            "request" to input,
+            "requestcount" to 0,
+            "response" to input,
+            "responsecount" to 0,
+        )
+
 
         Firebase.auth.createUserWithEmailAndPassword(userMail, userPass)
             .addOnCompleteListener {

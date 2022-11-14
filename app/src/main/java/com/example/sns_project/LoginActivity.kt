@@ -31,6 +31,7 @@ class LoginActivity : AppCompatActivity(){
     private val db: FirebaseFirestore = Firebase.firestore
     private val userinfoCollectionRef = db.collection("userinfo")
     private val hashMap: HashMap<String, Any> = HashMap()
+    var firestore : FirebaseFirestore? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +86,7 @@ class LoginActivity : AppCompatActivity(){
     }
 
     private fun firebaseAuthWithGoogle(idToken: String){
+        var input : ArrayList<String> = arrayListOf()
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) {
@@ -93,13 +95,46 @@ class LoginActivity : AppCompatActivity(){
                 user?.let{
                     val email = user.email
                     val name = user.displayName // info
-                    hashMap["Name"] = name.toString()
-                    if (email != null) {
+                    val hashMap = hashMapOf(
+                        "Name" to name.toString(),
+                        "friend" to 0,
+                        "request" to input,
+                        "requestcount" to 0,
+                        "response" to input,
+                        "responsecount" to 0,
+                    )
+                        //["Name"] = name.toString()
+                    var userArr : ArrayList<userDTO> = arrayListOf() // 유저 정보 담을 배열
+                    var userList : ArrayList<String> = arrayListOf() // 유저의 이메일(id값)을 담을 배열
+                    var count = 0
 
-                            userinfoCollectionRef.document(email).set(hashMap)
+
+                    firestore = FirebaseFirestore.getInstance()
+
+                        firestore?.collection("userinfo")?.addSnapshotListener {
+                                querySnapshot, firebaseFirestoreException ->
+                            userArr.clear()
+                            userList.clear()
+
+                            for(snapshot in querySnapshot!!.documents){
+
+                                var item = snapshot.toObject(userDTO::class.java)
+                                if(email == snapshot.id){
+                                    println("countfirst" + count)
+                                    count = 1
+                                }
+                                println(snapshot.id)
+                                println("이메일 " + email)
+                            }
+                            if (email != null && count == 0) {
+
+                                userinfoCollectionRef.document(email).set(hashMap)
 
 
-                    }
+                            }
+                        }
+
+
 
 
                 }
