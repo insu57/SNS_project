@@ -26,8 +26,10 @@ class settingFragment : Fragment() {
     ): View? {
         var auth : FirebaseAuth? = null
         auth = FirebaseAuth.getInstance()
-        startActivity(Intent(activity, LoginActivity::class.java))
         auth?.signOut()
+        activity?.finish()
+        startActivity(Intent(activity, LoginActivity::class.java))
+
 
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_setting, container, false)
