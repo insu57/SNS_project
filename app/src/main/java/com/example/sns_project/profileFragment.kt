@@ -20,7 +20,7 @@ import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.item_frienditem.view.*
 import java.util.Objects
 
-data class userDTO(var friend : Int? = 0, var Name: String? = null, var request: ArrayList<String>? = null, var requestcount: Int? = 0, var response: ArrayList<String>? = null , var responsecount: Int? = 0 ) // 파이어베이스 데이터베이스에서 불러오는 값들을 저장할 데이터 클래스
+data class userDTO(var friend : Int? = 0, var Name: String? = null, var request: ArrayList<String>? = null, var requestcount: Int? = 0, var response: ArrayList<String>? = null , var responsecount: Int? = 0, var show: String? = "all" ) // 파이어베이스 데이터베이스에서 불러오는 값들을 저장할 데이터 클래스
 
 
 class profileFragment : Fragment(R.layout.fragment_profile) {

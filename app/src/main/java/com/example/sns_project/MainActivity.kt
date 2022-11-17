@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import androidx.preference.PreferenceManager
 import com.example.sns_project.databinding.ActivityMainBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -17,6 +18,7 @@ class MainActivity : AppCompatActivity() {
     private val db: FirebaseFirestore = Firebase.firestore
     private val userCollectionRef = db.collection("userinfo")
     private var snapshotListener: ListenerRegistration? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +76,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeFragment(fragment: Fragment){
         //프래그먼트 전환
+        updateSetting()
         supportFragmentManager.beginTransaction().replace(binding.frame.id,fragment).commit()
+    }
+
+
+
+    private fun updateSetting() {
+        val settings = PreferenceManager.getDefaultSharedPreferences(this)
+        val reply = settings?.getString("reply", "")
+        val str = """$reply"""
+        val itemID = Firebase.auth.currentUser?.email
+        if (itemID != null) {
+            userCollectionRef.document(itemID).update("show", str)
+
+        }
     }
 
 

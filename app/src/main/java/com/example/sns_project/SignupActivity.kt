@@ -43,6 +43,7 @@ class SignupActivity: AppCompatActivity() {
             "requestcount" to 0,
             "response" to input,
             "responsecount" to 0,
+            "show" to "all",
         )
 
 
