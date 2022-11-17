@@ -1,12 +1,17 @@
 package com.example.sns_project
 
 import android.content.Context
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.databinding.ItemsBinding
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.ktx.Firebase
@@ -14,10 +19,11 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
-data class Items(val id: String,val Name: String, val userMail: String,
-                 val imagePath: String, val text: String,
-                 val timestamp : String
-                 ){
+data class Items(
+    val id: String, val Name: String, val userMail: String,
+    val imagePath: String, val text: String,
+    val timestamp: String
+    ){
 
     constructor(doc: QueryDocumentSnapshot):
             this(doc.id,doc["name"].toString(), doc["userMail"].toString(),
@@ -31,6 +37,10 @@ data class Items(val id: String,val Name: String, val userMail: String,
             )
 }
 lateinit var storage: FirebaseStorage
+private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
+private val commentsCollectionRef = db.collection("userPost")
+private var contentUidList : ArrayList<String> = arrayListOf()
+
 
 class PostViewHolder(val binding: ItemsBinding) :RecyclerView.ViewHolder(binding.root)
 
@@ -38,8 +48,16 @@ class PostViewHolder(val binding: ItemsBinding) :RecyclerView.ViewHolder(binding
 class PostAdapter(private val context: Context, private  var itemList: List<Items>)
     : RecyclerView.Adapter<PostViewHolder>(){
 
+    init{
+        commentsCollectionRef.addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
+            contentUidList.clear()
+            if(querySnapshot == null) return@addSnapshotListener
 
-
+            for(snapshot in querySnapshot!!.documents)
+                contentUidList.add(snapshot.id)
+            notifyDataSetChanged()
+        }
+    }
 
         fun updateList(newList:List<Items>){
             itemList = newList
@@ -64,7 +82,14 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         holder.binding.textMail.text = item.userMail
         holder.binding.textName.text = item.Name
         holder.binding.textView.text = item.text
+        holder.binding.commentimage.setImageResource(R.mipmap.ic_comment)
         displayImageRef(imageRef,holder.binding.imagePhoto)
+        holder.binding.commentimage.setOnClickListener{ v-> //선택한 게시물의 댓글 보기
+            var intent = Intent(v.context, CommentActivity::class.java)
+            intent.putExtra("contentUid", contentUidList[position])
+            startActivity(v.context, intent, null)
+        }
+
 
 
     }

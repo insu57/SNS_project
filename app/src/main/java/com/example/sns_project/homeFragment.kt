@@ -4,19 +4,13 @@ package com.example.sns_project
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.sns_project.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 class homeFragment : Fragment(R.layout.fragment_home) {
@@ -30,6 +24,7 @@ class homeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var binding: FragmentHomeBinding
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,10 +33,6 @@ class homeFragment : Fragment(R.layout.fragment_home) {
 
         binding.buttonPost.setOnClickListener {
             startActivity(Intent(activity,PostActivity::class.java)) //버튼클릭 시 포스트로 이동
-        }
-
-        binding.button2.setOnClickListener{ // 버튼클릭 시 댓글로 이동(임시 버튼)
-            startActivity(Intent(activity,CommentActivity::class.java))
         }
         //DB에서 가져와서 리사이클러뷰에 표시
 

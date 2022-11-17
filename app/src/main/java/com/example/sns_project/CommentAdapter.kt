@@ -6,6 +6,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.databinding.ItemCommentBinding
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import android.content.Context
+import java.text.SimpleDateFormat
+import java.util.Date
 
 data class Comment(val id: String, val name: String, val comment: String, val timestamp: Long) {
     constructor(doc: QueryDocumentSnapshot) :
@@ -35,7 +37,8 @@ class CommentAdapter(private val context: Context, private var comments: List<Co
         val comment = comments[position]
         holder.binding.commentText.text = comment.comment
         holder.binding.commentUserid.text = comment.name
-        holder.binding.commentProjile.setImageResource(R.drawable.ic_profile_default);
+        holder.binding.commentProjile.setImageResource(R.mipmap.ic_launcher);
+        holder.binding.commentTime.text = SimpleDateFormat("yyyy-MM-dd hh:mm").format(Date(comment.timestamp)).toString();
     }
 
     override fun getItemCount() = comments.size
