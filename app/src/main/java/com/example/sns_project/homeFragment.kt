@@ -50,6 +50,12 @@ class homeFragment : Fragment(R.layout.fragment_home) {
 
         //DB에서 가져와서 리사이클러뷰에 표시
 
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        //binding.recyclerView.adapter = PostAdapter
+        adapter = context?.let { PostAdapter(it, emptyList()) }
+        binding.recyclerView.adapter =adapter
+
+        updateList()
     }
 
     private fun updateList(){
