@@ -23,7 +23,7 @@ data class Items(
     val id: String, val Name: String, val userMail: String,
     val imagePath: String, val text: String,
     val timestamp: String
-    ){
+){
 
     constructor(doc: QueryDocumentSnapshot):
             this(doc.id,doc["name"].toString(), doc["userMail"].toString(),
@@ -59,10 +59,10 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         }
     }
 
-        fun updateList(newList:List<Items>){
-            itemList = newList
-            notifyDataSetChanged()
-        }
+    fun updateList(newList:List<Items>){
+        itemList = newList
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -82,7 +82,7 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         holder.binding.textMail.text = item.userMail
         holder.binding.textName.text = item.Name
         holder.binding.textView.text = item.text
-        holder.binding.commentimage.setImageResource(R.mipmap.ic_comment)
+        holder.binding.commentimage.setImageResource(R.mipmap.ic_launcher)
         displayImageRef(imageRef,holder.binding.imagePhoto)
         holder.binding.commentimage.setOnClickListener{ v-> //선택한 게시물의 댓글 보기
             var intent = Intent(v.context, CommentActivity::class.java)

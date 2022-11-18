@@ -70,4 +70,3 @@ class CommentActivity : AppCompatActivity() {
 
 
 }
-

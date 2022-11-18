@@ -4,13 +4,19 @@ package com.example.sns_project
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.sns_project.databinding.FragmentHomeBinding
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 
 class homeFragment : Fragment(R.layout.fragment_home) {
@@ -45,13 +51,41 @@ class homeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun updateList(){
+        var userArr: ArrayList<userDTO> = arrayListOf() // 유저의 이메일(id값)을 담을 배열
+        var userList: ArrayList<String> = arrayListOf() // 유저의 이메일(id값)을 담을 배열
+        userinfoCollectionRef.get().addOnSuccessListener {
+            for (doc in it) {
+
+                var item = doc.toObject(userDTO::class.java)
+                if (item != null) {
+                    if(item.show=="none"){
+                        userArr.add(item!!)
+                        userList.add(doc.id)
+                    }
+
+                } // 이름 ( doc.name)
+
+
+
+            }
+
+        }
         userPostCollectionRef.orderBy("timestamp", Query.Direction.DESCENDING).get().addOnSuccessListener {
             val items = mutableListOf<Items>()
             for(doc in it){
-                items.add(Items(doc))
+                var count = 0
+                for(i in 0 until userList.size!!){
+                    if(Items(doc).userMail == userList[i]){
+                        count = 1
+                    }
+                }
+                if(count != 1){
+                    items.add(Items(doc))
+                }
+
             }
             adapter?.updateList(items)
-         }
+        }
     }
 
 
