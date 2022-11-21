@@ -85,10 +85,10 @@ class PostActivity : AppCompatActivity() {
         hashMap["userMail"] = userMail!!
         hashMap["imagePath"] = "gs://sns-project-c4954.appspot.com/image/$userMail/$fileName"
         hashMap["timestamp"] = timestamp
-        userinfoCollectionRef.document(userMail!!).get().addOnSuccessListener {
+        userinfoCollectionRef.document(userMail).get().addOnSuccessListener {
             hashMap["name"] = it["name"].toString()
         }
-        hashMap["text"] =  binding.editText.text.toString() //줄바꿈 처리 필요
+        hashMap["text"] =  binding.editText.text.toString()
 
         imageRef.putFile(photoUri!!).addOnCompleteListener{
             userPostCollectionRef.document().set(hashMap)
