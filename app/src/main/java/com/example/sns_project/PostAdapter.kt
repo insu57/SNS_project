@@ -77,7 +77,7 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         val item = itemList[position]
         val storageReference = storage.reference
         val imageRef = storage.getReferenceFromUrl(item.imagePath)
-
+        val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${item.userMail}/${item.userMail}")
 
         holder.binding.textMail.text = item.userMail
         holder.binding.textName.text = item.Name
@@ -90,6 +90,14 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
             startActivity(v.context, intent, null)
         }
 
+
+        holder.binding.imageProfile.setOnClickListener{
+            val intent = Intent(this.context,  MyProfileActivity::class.java)
+            intent.putExtra("contentUid", contentUidList[position])
+            startActivity(this.context, intent, null)
+        }
+
+        displayImageRef(profileImage, holder.binding.imageProfile)
 
 
     }

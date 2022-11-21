@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:usesCleartextTraffic="true"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:usesCleartextTraffic="true">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -17,6 +17,14 @@
         android:theme="@style/Theme.SNS_Project"
         tools:targetApi="31">
         <activity
+            android:name=".MyProfileActivity"
+            android:parentActivityName=".MainActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".CommentActivity"
             android:exported="false">
             <meta-data
@@ -26,7 +34,6 @@
         <activity
             android:name=".PostActivity"
             android:exported="false"
-            android:label="Post"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.app.lib_name"
@@ -34,8 +41,7 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:label="Main">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,11 +54,9 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:label="Login"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".SignupActivity"
-            android:label="SignUp"
             android:parentActivityName=".MainActivity" />
     </application>
 
