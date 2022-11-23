@@ -35,7 +35,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextMail" />
 
     <Button
-    android:id="@+id/buttonLogin"
+        android:id="@+id/buttonLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="76dp"
@@ -69,5 +69,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/buttonLogin"
         app:layout_constraintVertical_bias="0.486" />
+
+    <ImageView
+        android:id="@+id/imageBanner"
+        android:layout_width="405dp"
+        android:layout_height="171dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_banner1_foreground" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

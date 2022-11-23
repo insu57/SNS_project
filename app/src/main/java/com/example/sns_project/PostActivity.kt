@@ -24,6 +24,7 @@ class PostActivity : AppCompatActivity() {
     private var photoUri: Uri? = null
     private val userMail = Firebase.auth.currentUser?.email
     private val db: FirebaseFirestore = Firebase.firestore
+    private val userinfoCollectionRef = db.collection("userinfo")
     private val userPostCollectionRef = db.collection("userPost")
     private val hashMap: HashMap<String, Any> = HashMap()
 
@@ -54,10 +55,10 @@ class PostActivity : AppCompatActivity() {
 
     private fun openGallery() {
         val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),
-            ActivityResultCallback {
-                binding.imageView.setImageURI(it)
-                photoUri= it
-            })
+        ActivityResultCallback {
+            binding.imageView.setImageURI(it)
+            photoUri= it
+        })
 
         loadImage.launch("image/*")
 
@@ -76,12 +77,17 @@ class PostActivity : AppCompatActivity() {
         val storageRef = storage.reference
         val imageRef = storageRef.child("image/$userMail/$fileName")
 
+
+
+
         //gs://sns-project-c4954.appspot.com/image/userMail -> 파이어스토리지 이미지 경로 - Url
 
         hashMap["userMail"] = userMail!!
         hashMap["imagePath"] = "gs://sns-project-c4954.appspot.com/image/$userMail/$fileName"
         hashMap["timestamp"] = timestamp
-
+        userinfoCollectionRef.document(userMail).get().addOnSuccessListener {
+            hashMap["name"] = it["name"].toString()
+        }
         hashMap["text"] =  binding.editText.text.toString()
 
         imageRef.putFile(photoUri!!).addOnCompleteListener{

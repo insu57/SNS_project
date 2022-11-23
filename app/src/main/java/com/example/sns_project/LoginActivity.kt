@@ -102,6 +102,7 @@ class LoginActivity : AppCompatActivity(){
                         "requestcount" to 0,
                         "response" to input,
                         "responsecount" to 0,
+                        "show" to "all"
                     )
                         //["Name"] = name.toString()
                     var userArr : ArrayList<userDTO> = arrayListOf() // 유저 정보 담을 배열

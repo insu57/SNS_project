@@ -1,5 +1,6 @@
 package com.example.sns_project
 
+import android.content.ClipData.Item
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -43,6 +44,7 @@ class SignupActivity: AppCompatActivity() {
             "requestcount" to 0,
             "response" to input,
             "responsecount" to 0,
+            "show" to "all",
         )
 
 

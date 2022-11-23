@@ -46,6 +46,7 @@
 
 
 
+
     <EditText
         android:id="@+id/editTextName"
         android:layout_width="wrap_content"

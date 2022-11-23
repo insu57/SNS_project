@@ -18,9 +18,17 @@
         android:id="@+id/editTextComment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         app:layout_constraintEnd_toStartOf="@+id/buttonSend"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/recyclerView_Comment" />
+=======
+        android:minHeight="48dp"
+        app:layout_constraintEnd_toStartOf="@+id/buttonSend"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView_Comment"
+        tools:ignore="SpeakableTextPresentCheck" />
+>>>>>>> origin/insu57
 
     <Button
         android:id="@+id/buttonSend"

@@ -1,160 +1,151 @@
 package com.example.sns_project
 
-import android.content.Context
+
 import android.content.Intent
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet.Layout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.sns_project.databinding.FragmentHomeBinding
-import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
-import com.google.firebase.storage.ktx.storage
-import kotlinx.android.synthetic.main.fragment_home.view.*
-import kotlinx.android.synthetic.main.item_frienditem.view.*
-import kotlinx.android.synthetic.main.item_post.view.*
-
-data class postDTO(var imagePath : String? = null, var text: String? = null, var timestamp: String? = null, var userMail: String? = null) // 파이어베이스 데이터베이스에서 불러오는 값들을 저장할 데이터 클래스
 
 class homeFragment : Fragment(R.layout.fragment_home) {
-    lateinit var storage: FirebaseStorage
-    var firestore: FirebaseFirestore? = null
-    var fragmentView: View? = null
-    var uid: String? = null
+
     private val db: FirebaseFirestore = Firebase.firestore
+    private var adapter : PostAdapter? = null
+    private val userinfoCollectionRef = db.collection("userinfo")
+    private val userPostCollectionRef = db.collection("userPost")
+    private var snapshotListener: ListenerRegistration?= null
+    var postMailList: ArrayList<String> = arrayListOf()
+    var currentUserUid : String? = null
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        storage = Firebase.storage
+    private lateinit var binding: FragmentHomeBinding
 
-        fragmentView =
-            LayoutInflater.from(activity).inflate(R.layout.fragment_home, container, false)
-        var view = LayoutInflater.from(activity).inflate(R.layout.fragment_home, container, false)
-        firestore = FirebaseFirestore.getInstance()
-        uid = FirebaseAuth.getInstance().currentUser?.uid
 
-        view.homerecyclerView.layoutManager = LinearLayoutManager(activity)
-        view.homerecyclerView.adapter = PostViewAdapter()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
+        //val binding = FragmentHomeBinding.bind(view)
+        binding = FragmentHomeBinding.bind(view)
+
+        binding.buttonPost.setOnClickListener {
+            startActivity(Intent(activity,PostActivity::class.java)) //버튼클릭 시 포스트로 이동
+        }
         //DB에서 가져와서 리사이클러뷰에 표시
-        view.buttonPost.setOnClickListener {
-            startActivity(Intent(activity, PostActivity::class.java)) //버튼클릭 시 포스트로 이동
-        }
 
-        view.button2.setOnClickListener {
-            startActivity(Intent(activity, CommentActivity::class.java))
-        }
-        return view
+        binding.recyclerView.layoutManager = LinearLayoutManager(context)
+        //binding.recyclerView.adapter = PostAdapter
+        adapter = context?.let { PostAdapter(it, emptyList()) }
+        binding.recyclerView.adapter =adapter
+
+        updateList()
     }
 
+    private fun updateList(){
+        var userArr: ArrayList<userDTO> = arrayListOf() // 비공개 리스트
+        var userList: ArrayList<String> = arrayListOf() // 비공개 email
+        var userArr2: ArrayList<userDTO> = arrayListOf() // 친구공개일때 못보는 리스트
+        var userList2: ArrayList<String> = arrayListOf() // 친구공개 email
+        var allArr: ArrayList<userDTO> = arrayListOf() // 전체
+        var allList: ArrayList<String> = arrayListOf() // 전체
+        var checkuser = FirebaseAuth.getInstance().currentUser?.email // 현재 유저
+        var currentuser :userDTO? = null // 현재유저의 데이터정보를 넣어놀 저장공간
 
 
-    inner class PostViewAdapter() : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-        var checkuser = FirebaseAuth.getInstance().currentUser?.email // 자신의 이메일 정보
-        var postArr: ArrayList<postDTO> = arrayListOf() // 유저 정보 담을 배열
-        var userArr: ArrayList<userDTO> = arrayListOf() // 유저의 이메일(id값)을 담을 배열
-        var userList: ArrayList<String> = arrayListOf() // 유저의 이메일(id값)을 담을 배열
-
-        init { // 모음
-            firestore?.collection("userPost")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    postArr.clear()
-
-
-                    for (snapshot in querySnapshot!!.documents) {
-
-                        var item = snapshot.toObject(postDTO::class.java)
-
-                        postArr.add(item!!) // 이름 ( doc.name)
-
-
-                    }
-                    notifyDataSetChanged() // 갱신
-                }
-            firestore?.collection("userinfo")
-                ?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-                    userArr.clear()
-
-
-                    for (snapshot in querySnapshot!!.documents) {
-
-                        var item = snapshot.toObject(userDTO::class.java)
-
-                        userArr.add(item!!) // 이름 ( doc.name)
-                        userList.add(snapshot.id)
-
-
-                    }
-                    notifyDataSetChanged() // 갱신
-                }
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-            var view = LayoutInflater.from(parent.context).inflate(R.layout.item_post, parent, false)
-            return CustomViewHolder(view)
-        }
-
-       inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view)
-
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            val viewholder = (holder as homeFragment.PostViewAdapter.CustomViewHolder).itemView
-            println("ok" + postArr[position].userMail)
-            println("ok" + postArr[position])
-            println("ok2" + userArr.size)
-            var check = 0
-
-                for(i in 0 until userArr.size){
-                    if(postArr[position].userMail == userList[i]){
-                        check = i
+        userinfoCollectionRef.get().addOnSuccessListener { // 전체배열
+            for (doc in it) {
+                var item = doc.toObject(userDTO::class.java)
+                if (item != null) {
+                    allArr.add(item!!)
+                    allList.add(doc.id)
+                    if(checkuser == doc.id){
+                        currentuser = item
+                        println(currentuser)
                     }
                 }
-
-            storage = Firebase.storage
-            viewholder.postviewitem_profile_textview.text = userArr[check].Name + " " + postArr[position].userMail
-            // 유저 이름 + 유저 이메일정보 ( 추후에 사진 대신 프로필 사진 구현 예정)
-            val imageRef = postArr[position].imagePath?.let { storage.getReferenceFromUrl(it) }
-            //Glide.with(holder.itemView.context).load(postArr[position].imagePath).into(viewholder.postviewitem_imageview_content)
-            displayImageRef(imageRef, viewholder.postviewitem_imageview_content)
-
-            viewholder.postviewitem_text_textview.text = postArr[position].text
-
-            viewholder.postviewitem_profile_image.setOnClickListener{ v->
-                var intent = Intent(v.context, UserActivity::class.java)
-                intent.putExtra("currentemail", checkuser)
-                intent.putExtra("destinationemail", postArr[position].userMail)
-                println("go")
-                startActivity(intent)
-
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return postArr.size
-
-        }
-        private fun displayImageRef(imageRef: StorageReference?, view: ImageView) {
-            imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
-                val bmp = BitmapFactory.decodeByteArray(it, 0, it.size)
-                view.setImageBitmap(bmp)
-            }?.addOnFailureListener {
-                // Failed to download the image
             }
         }
 
 
+        userinfoCollectionRef.get().addOnSuccessListener {
+            for (doc in it) {
+
+                var item = doc.toObject(userDTO::class.java)
+                if (item != null) {
+                    if(checkuser==doc.id){ // 내 게시물일때는 전부 스킵
+
+                    }
+                    else if(item.show=="none"){ // 비공개일때
+                        userArr.add(item!!)
+                        userList.add(doc.id)
+                    }
+                    else if(item.show=="friend"){ // 친구만 보기일때
+                        var findcount = 0
+                        // 서로의 리퀘스트, 리스펀스 배열을 비교해서 서로의 이름이 있으면 친구 하나라도 없으면 친구 아님
+                        for(i in 0 until (item.response?.size!!)){ // response 배열안에 있는 값들 전부 끄집기
+                            if(checkuser == item?.response?.get(i)){
+
+
+                                for(j in 0 until (currentuser?.request?.size!!)) {
+                                    if(doc.id == currentuser?.request!![j]){
+                                        findcount = 1
+                                    }
+                                }
+                            }
+
+                        }
+
+                        if(findcount == 0){
+
+                            userArr2.add(item!!) // 유저의 데이터 정보를 담는 배열
+                            userList2.add(doc.id) // 유저의 이메일을 담는 배열
+                        }
+
+
+
+                    }
+
+                } // 이름 ( doc.name)
+
+            }
+
+        }
+        userPostCollectionRef.orderBy("timestamp", Query.Direction.DESCENDING).get().addOnSuccessListener {
+            val items = mutableListOf<Items>()
+            for(doc in it){
+                var count = 0
+                for(i in 0 until userList.size!!){
+                    if(Items(doc).userMail == userList[i]){
+                        count = 1
+                    }
+                }
+                for(i in 0 until userList2.size!!){
+                    if(Items(doc).userMail == userList2[i]){
+                        count = 1
+                    }
+                }
+                if(count != 1){
+                    items.add(Items(doc))
+                }
+
+            }
+            adapter?.updateList(items)
+        }
     }
+
+
+
 }
