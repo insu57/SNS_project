@@ -6,40 +6,63 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentManager
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceManager
+import com.example.sns_project.databinding.FragmentHomeBinding
+import com.example.sns_project.databinding.FragmentSettingBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import kotlinx.android.synthetic.main.fragment_setting.view.*
 
 
-class settingFragment : PreferenceFragmentCompat() {
+class settingFragment : Fragment(R.layout.fragment_setting) {
 
     //미완성
-
-    override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        setPreferencesFromResource(R.xml.root_preferences, rootKey)
-
-        displaySettings()
-    }
-
-    private fun displaySettings() {
-        val settings = activity?.let { PreferenceManager.getDefaultSharedPreferences(it) }
-        val reply = settings?.getString("reply", "")
-        val str = """reply: $reply"""
-        println(str)
-    }
+    var firestore : FirebaseFirestore? = null
+    var fragmentView : View? = null
+    var uid : String? = null
+    private val db: FirebaseFirestore = Firebase.firestore
+    private val userCollectionRef = db.collection("userinfo")
 
 
+    private lateinit var binding: FragmentSettingBinding
 
-    /*override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         //supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        binding = FragmentSettingBinding.bind(view)
+        firestore = FirebaseFirestore.getInstance()
+        uid = FirebaseAuth.getInstance().currentUser?.uid
 
+
+
+        binding.logout.setOnClickListener {
+            var auth : FirebaseAuth? = null
+            auth = FirebaseAuth.getInstance()
+            auth?.signOut()
+            activity?.finish()
+            startActivity(Intent(activity, LoginActivity::class.java))
+        }
+
+
+        binding.setting.setOnClickListener {
+
+            //SettingPreferenceFragment()
+            startActivity(Intent(activity, SettingsActivity::class.java))
+
+
+                    }
 
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false)
-    }*/
+        //return inflater.inflate(R.layout.fragment_setting, container, false)
+    }
+
+
 
 
 }
+

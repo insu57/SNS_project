@@ -76,22 +76,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun changeFragment(fragment: Fragment){
         //프래그먼트 전환
-        updateSetting()
+
         supportFragmentManager.beginTransaction().replace(binding.frame.id,fragment).commit()
     }
 
 
 
-    private fun updateSetting() {
-        val settings = PreferenceManager.getDefaultSharedPreferences(this)
-        val reply = settings?.getString("reply", "")
-        val str = """$reply"""
-        val itemID = Firebase.auth.currentUser?.email
-        if (itemID != null) {
-            userCollectionRef.document(itemID).update("show", str)
 
-        }
-    }
 
 
 }
