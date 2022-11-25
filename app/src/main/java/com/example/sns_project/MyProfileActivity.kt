@@ -6,9 +6,12 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.View
 import android.widget.ImageView
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import com.example.sns_project.databinding.ActivityMyProfileBinding
 
 import com.google.firebase.auth.ktx.auth
@@ -28,17 +31,29 @@ class MyProfileActivity : AppCompatActivity() {
     private var photoUri: Uri? = null
     private val hashMap: HashMap<String, Any> = HashMap()
 
-
+    private val myMail = Firebase.auth.currentUser?.email
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val userMail = intent.getStringExtra("userMail")
+
+
+        println("!!!$userMail")
+        println("MY!!!$myMail")
+        if(userMail.equals(myMail)){
+            binding.buttonProfile.visibility = View.VISIBLE
+            println("IMAGE   VISIBLE")
+        }
+
 
         setContentView(binding.root)
 
         storage = Firebase.storage
 
-        val userMail = Firebase.auth.currentUser?.email
+
+
+
         val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${userMail}/${userMail}")
         binding.profileMail.text = userMail
 
@@ -50,7 +65,7 @@ class MyProfileActivity : AppCompatActivity() {
 
         val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),
             ActivityResultCallback {
-                binding.imageViewProfile.setImageURI(it)
+
                 photoUri= it
                 uploadImage()
             })
@@ -59,8 +74,8 @@ class MyProfileActivity : AppCompatActivity() {
         binding.buttonProfile.setOnClickListener {
 
 
-           loadImage.launch("image/*")
-
+            loadImage.launch("image/*")
+            binding.imageViewProfile.setImageURI(photoUri)
 
         }
 
@@ -83,7 +98,7 @@ class MyProfileActivity : AppCompatActivity() {
         hashMap["ProfileImage"] = userMail!!
 
         imageRef.putFile(photoUri!!).addOnSuccessListener {
-            //userinfoCollectionRef.document().update(hashMap)
+           //
         }
 
     }
@@ -91,6 +106,8 @@ class MyProfileActivity : AppCompatActivity() {
         imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
             val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
             view.setImageBitmap(bmp)
+        }?.addOnFailureListener{
+            println("img null")
         }
     }
 

@@ -46,9 +46,9 @@ class homeFragment : Fragment(R.layout.fragment_home) {
             startActivity(Intent(activity,PostActivity::class.java)) //버튼클릭 시 포스트로 이동
         }
 
-        binding.button2.setOnClickListener{ // 버튼클릭 시 댓글로 이동(임시 버튼)
-            startActivity(Intent(activity,CommentActivity::class.java))
-        }
+        //binding.button2.setOnClickListener{ // 버튼클릭 시 댓글로 이동(임시 버튼)
+        //    startActivity(Intent(activity,CommentActivity::class.java))
+       // }
 
         //DB에서 가져와서 리사이클러뷰에 표시
 

@@ -94,10 +94,13 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         holder.binding.imageProfile.setOnClickListener{
             val intent = Intent(this.context,  MyProfileActivity::class.java)
             intent.putExtra("contentUid", contentUidList[position])
+            intent.putExtra("userMail",item.userMail)
             startActivity(this.context, intent, null)
         }
 
         displayImageRef(profileImage, holder.binding.imageProfile)
+
+
 
 
     }
@@ -109,8 +112,11 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
 
     private fun displayImageRef(imageRef : StorageReference?, view: ImageView){
         imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
+
             val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
             view.setImageBitmap(bmp)
+        }?.addOnFailureListener(){
+            println("Profile Image Default")
         }
     }
 
