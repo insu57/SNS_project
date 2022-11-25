@@ -7,12 +7,12 @@ plugins {
 
 android {
     namespace 'com.example.sns_project'
-    compileSdk 33
+    compileSdkVersion 33
 
     defaultConfig {
         applicationId "com.example.sns_project"
-        minSdk 28
-        targetSdk 33
+        minSdkVersion 28
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
 
@@ -25,6 +25,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+
 
     buildFeatures{
         viewBinding true

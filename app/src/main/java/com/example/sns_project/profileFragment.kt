@@ -71,11 +71,34 @@ class profileFragment : Fragment(R.layout.fragment_profile) {
                 userList.clear()
 
                 for(snapshot in querySnapshot!!.documents){
-
+                    var checkcount = 0
                     var item = snapshot.toObject(userDTO::class.java)
-                    if(checkuser != snapshot.id){
-                        userArr.add(item!!) // 이름 ( doc.name)
-                        userList.add(snapshot.id) // id값 ( 이메일 )
+                    if (item != null) {
+                        if(checkuser != snapshot.id && item.requestcount!=0) {
+                            println("1")
+                            for (i in 0 until item.requestcount!!) {
+
+                                if(checkuser == item.request?.get(i)) {
+                                    println("2")
+                                    if(item.responsecount!=0) {
+                                        println("3")
+                                        for(j in 0 until item.responsecount!!) {
+                                            if(checkuser == item.response?.get(j)) {
+                                                println("4")
+                                                checkcount = 1
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                        }
+                        if(checkcount == 1){
+                            userArr.add(item!!) // 이름 ( doc.name)
+                            userList.add(snapshot.id) // id값 ( 이메일 )
+                        }
+
+
                     }
                 }
                 notifyDataSetChanged() // 갱신
