@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@+id/friendviewitem_profile_image"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/ic_person"
         android:layout_margin="7.5dp"
         android:layout_width="35dp"
         android:layout_height="35dp"/>

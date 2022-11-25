@@ -1,6 +1,7 @@
 package com.example.sns_project
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,12 +9,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.fragment_search.view.*
 import kotlinx.android.synthetic.main.item_frienditem.view.*
@@ -66,7 +70,7 @@ class searchFragment : Fragment() {
 
         })
 
-
+        storage = Firebase.storage
 
 
 
@@ -121,10 +125,11 @@ class searchFragment : Fragment() {
 
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val viewholder = (holder as CustomViewHolder).itemView
+            val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${userList[position]}/${userList[position]}")
             println(userArr[position])
             viewholder.friendviewitem_profile_textview.text = userArr[position].Name + " " + userList[position]
             // 유저 이름 + 유저 이메일정보 ( 추후에 사진 대신 프로필 사진 구현 예정)
-
+            displayImageRef(profileImage, viewholder.friendviewitem_profile_image)
             viewholder.friendviewitem_profile_image.setOnClickListener{ v->
                 var intent = Intent(v.context, UserActivity::class.java)
                 intent.putExtra("currentemail", checkuser)
@@ -140,5 +145,13 @@ class searchFragment : Fragment() {
         }
     }
 
+    private fun displayImageRef(imageRef : StorageReference?, view: ImageView){
+        imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
 
+            val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
+            view.setImageBitmap(bmp)
+        }?.addOnFailureListener(){
+           view.setImageResource(R.drawable.ic_person)
+        }
+    }
 }

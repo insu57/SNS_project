@@ -1,10 +1,15 @@
 package com.example.sns_project
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.sns_project.databinding.ActivityUserBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 
 class UserActivity  : AppCompatActivity() {
     var currentemail : String? = null
@@ -25,7 +30,13 @@ class UserActivity  : AppCompatActivity() {
         currentemail = intent.getStringExtra("currentemail")
         destionationemail = intent.getStringExtra("destinationemail")
 
+        storage = Firebase.storage
 
+
+
+
+        val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${destionationemail}/${destionationemail}")
+        displayImageRef(profileImage, binding.accountIvProfile)
 
 
         firestore = FirebaseFirestore.getInstance()
@@ -249,6 +260,16 @@ class UserActivity  : AppCompatActivity() {
             }
 
 
+        }
+    }
+
+    private fun displayImageRef(imageRef : StorageReference?, view: ImageView){
+        imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
+
+            val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
+            view.setImageBitmap(bmp)
+        }?.addOnFailureListener(){
+            view.setImageResource(R.drawable.ic_account)
         }
     }
 }

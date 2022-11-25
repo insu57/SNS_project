@@ -82,7 +82,7 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         holder.binding.textMail.text = item.userMail
         holder.binding.textName.text = item.Name
         holder.binding.textView.text = item.text
-        holder.binding.commentimage.setImageResource(R.mipmap.ic_launcher)
+        holder.binding.commentimage.setImageResource(R.drawable.ic_add_comment)
         displayImageRef(imageRef,holder.binding.imagePhoto)
         holder.binding.commentimage.setOnClickListener{ v-> //선택한 게시물의 댓글 보기
             var intent = Intent(v.context, CommentActivity::class.java)
