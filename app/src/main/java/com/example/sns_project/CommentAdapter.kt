@@ -42,7 +42,7 @@ class CommentAdapter(private val context: Context, private var comments: List<Co
         val comment = comments[position]
         holder.binding.commentText.text = comment.comment
         holder.binding.commentUserid.text = comment.name
-        holder.binding.commentProjile.setImageResource(R.mipmap.ic_comment);
+        holder.binding.commentProjile.setImageResource(R.mipmap.ic_launcher);
         holder.binding.commentTime.text = SimpleDateFormat("yyyy-MM-dd hh:mm").format(Date(comment.timestamp)).toString();
     }
 
