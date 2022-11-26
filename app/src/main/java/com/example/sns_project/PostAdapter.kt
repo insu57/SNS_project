@@ -20,7 +20,7 @@ import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
 
 data class Items(
-    val id: String, val Name: String, val userMail: String,
+    val id: String, val name: String, val userMail: String,
     val imagePath: String, val text: String,
     val timestamp: String
 ){
@@ -31,7 +31,7 @@ data class Items(
                 doc["timestamp"].toString()
             )
     constructor(key: String, map:Map<*, *>):
-            this(key,map["Name"].toString(), map["userMail"].toString(),
+            this(key,map["name"].toString(), map["userMail"].toString(),
                 map["imagePath"].toString(), map["text"].toString(),
                 map["timestamp"].toString()
             )
@@ -80,7 +80,7 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${item.userMail}/${item.userMail}")
 
         holder.binding.textMail.text = item.userMail
-        holder.binding.textName.text = item.Name
+        holder.binding.textName.text = item.name
         holder.binding.textView.text = item.text
         holder.binding.commentimage.setImageResource(R.mipmap.ic_comment)
         displayImageRef(imageRef,holder.binding.imagePhoto)

@@ -38,7 +38,7 @@ class SignupActivity: AppCompatActivity() {
     private fun doSignup(userName: String,userMail: String, userPass: String){
         var input : ArrayList<String> = arrayListOf()
         val hashMap = hashMapOf(
-            "Name" to userName,
+            "name" to userName,
             "friend" to 0,
             "request" to input,
             "requestcount" to 0,
@@ -61,7 +61,7 @@ class SignupActivity: AppCompatActivity() {
             }
 
 
-        userinfoCollectionRef.document(userMail).set(hashMap) //DB에 userinfo/userMail/ 에 Name:userName 저장
+        userinfoCollectionRef.document(userMail).set(hashMap) //DB에 userinfo/userMail/ 에 name:userName 저장
             .addOnCompleteListener {
                 if(it.isSuccessful){
                     Toast.makeText(this, "회원가입 성공", Toast.LENGTH_SHORT).show()
@@ -75,6 +75,7 @@ class SignupActivity: AppCompatActivity() {
 
 
     }
+
 
 
 

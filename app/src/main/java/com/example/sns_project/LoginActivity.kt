@@ -96,7 +96,7 @@ class LoginActivity : AppCompatActivity(){
                     val email = user.email
                     val name = user.displayName // info
                     val hashMap = hashMapOf(
-                        "Name" to name.toString(),
+                        "name" to name.toString(),
                         "friend" to 0,
                         "request" to input,
                         "requestcount" to 0,

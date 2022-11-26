@@ -126,10 +126,12 @@ class searchFragment : Fragment() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             val viewholder = (holder as CustomViewHolder).itemView
             val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${userList[position]}/${userList[position]}")
+
             println(userArr[position])
             viewholder.friendviewitem_profile_textview.text = userArr[position].Name + " " + userList[position]
             // 유저 이름 + 유저 이메일정보 ( 추후에 사진 대신 프로필 사진 구현 예정)
             displayImageRef(profileImage, viewholder.friendviewitem_profile_image)
+
             viewholder.friendviewitem_profile_image.setOnClickListener{ v->
                 var intent = Intent(v.context, UserActivity::class.java)
                 intent.putExtra("currentemail", checkuser)
