@@ -40,7 +40,8 @@ data class Items(
 }
 lateinit var storage: FirebaseStorage
 private val db: FirebaseFirestore = FirebaseFirestore.getInstance()
-private val commentsCollectionRef = db.collection("userPost")
+
+private val userPostCollectionRef = db.collection("userPost")
 private var contentUidList : ArrayList<String> = arrayListOf()
 
 
@@ -51,7 +52,9 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
     : RecyclerView.Adapter<PostViewHolder>(){
 
     init{
-        commentsCollectionRef.addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
+
+
+        userPostCollectionRef.addSnapshotListener{ querySnapshot, firebaseFirestoreException ->
             contentUidList.clear()
             if(querySnapshot == null) return@addSnapshotListener
 
@@ -59,6 +62,9 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
                 contentUidList.add(snapshot.id)
             notifyDataSetChanged()
         }
+
+
+
     }
 
     fun updateList(newList:List<Items>){
@@ -82,12 +88,13 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${item.userMail}/${item.userMail}")
         val myMail = Firebase.auth.currentUser?.email
 
+
         if(item.userMail == myMail){
             holder.binding.buttonDelete.visibility = View.VISIBLE
             println("button  VISIBLE")
         }
         holder.binding.buttonDelete.setOnClickListener {
-            commentsCollectionRef.document(item.id).delete().addOnSuccessListener { updateList(itemList) }
+            userPostCollectionRef.document(item.id).delete().addOnSuccessListener { updateList(itemList) }
         }
 
 
@@ -96,10 +103,16 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         holder.binding.textView.text = item.text
         holder.binding.commentimage.setImageResource(R.mipmap.ic_comment)
         displayImageRef(imageRef,holder.binding.imagePhoto)
-        holder.binding.commentimage.setOnClickListener{ v-> //선택한 게시물의 댓글 보기
-            var intent = Intent(v.context, CommentActivity::class.java)
-            intent.putExtra("contentUid", contentUidList[position])
-            startActivity(v.context, intent, null)
+
+
+
+
+
+
+        holder.binding.commentimage.setOnClickListener{  //선택한 게시물의 댓글 보기
+            val intent = Intent(this.context, CommentActivity::class.java)
+            intent.putExtra("contentUid", item.id)
+            startActivity(this.context, intent, null)
         }
 
 

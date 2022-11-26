@@ -34,6 +34,7 @@ class MyProfileActivity : AppCompatActivity() {
     private val myMail = Firebase.auth.currentUser?.email
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val userMail = intent.getStringExtra("userMail")
@@ -68,6 +69,7 @@ class MyProfileActivity : AppCompatActivity() {
 
                 photoUri= it
                 uploadImage()
+                binding.imageViewProfile.setImageURI(it)
             })
 
 

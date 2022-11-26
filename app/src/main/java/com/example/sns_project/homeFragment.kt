@@ -36,6 +36,8 @@ class homeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var binding: FragmentHomeBinding
 
 
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -46,6 +48,7 @@ class homeFragment : Fragment(R.layout.fragment_home) {
 
         binding.buttonPost.setOnClickListener {
             startActivity(Intent(activity,PostActivity::class.java)) //버튼클릭 시 포스트로 이동
+
         }
 
         //binding.button2.setOnClickListener{ // 버튼클릭 시 댓글로 이동(임시 버튼)
@@ -61,6 +64,7 @@ class homeFragment : Fragment(R.layout.fragment_home) {
 
         updateList()
     }
+
 
 
 
@@ -89,6 +93,7 @@ class homeFragment : Fragment(R.layout.fragment_home) {
                 }
             }
         }
+
 
 
         userinfoCollectionRef.get().addOnSuccessListener {
