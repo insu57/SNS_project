@@ -1,11 +1,13 @@
 package com.example.sns_project
 
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.databinding.FragmentHomeBinding
@@ -16,6 +18,8 @@ import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.ktx.storage
 import kotlinx.android.synthetic.main.fragment_profile.view.*
 import kotlinx.android.synthetic.main.item_frienditem.view.*
 import java.util.Objects
@@ -49,7 +53,7 @@ class profileFragment : Fragment(R.layout.fragment_profile) {
         view.profilefragment_recyclerview.layoutManager = LinearLayoutManager(activity)
         view.profilefragment_recyclerview.adapter = UserProfileViewAdapter()
 
-
+        storage = Firebase.storage
 
 
         // Inflate the layout for this fragment
@@ -119,6 +123,9 @@ class profileFragment : Fragment(R.layout.fragment_profile) {
             viewholder.friendviewitem_profile_textview.text = userArr[position].Name + " " + userList[position]
             // 유저 이름 + 유저 이메일정보 ( 추후에 사진 대신 프로필 사진 구현 예정)
 
+            val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${userList[position]}/${userList[position]}")
+            displayImageRef(profileImage, viewholder.friendviewitem_profile_image)
+
             viewholder.friendviewitem_profile_image.setOnClickListener{ v->
                 var intent = Intent(v.context, UserActivity::class.java)
                 intent.putExtra("currentemail", checkuser)
@@ -134,6 +141,15 @@ class profileFragment : Fragment(R.layout.fragment_profile) {
         }
     }
 
+    private fun displayImageRef(imageRef : StorageReference?, view: ImageView){
+        imageRef?.getBytes(Long.MAX_VALUE)?.addOnSuccessListener {
+
+            val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
+            view.setImageBitmap(bmp)
+        }?.addOnFailureListener(){
+           view.setImageResource(R.drawable.ic_person)
+        }
+    }
 
 }
 

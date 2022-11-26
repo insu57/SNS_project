@@ -116,7 +116,8 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
             val bmp = BitmapFactory.decodeByteArray(it,0,it.size)
             view.setImageBitmap(bmp)
         }?.addOnFailureListener(){
-            println("Profile Image Default")
+            //println("Profile Image Default")
+            view.setImageResource(R.drawable.ic_person)
         }
     }
 
