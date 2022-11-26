@@ -105,7 +105,7 @@ class searchFragment : Fragment() {
 
                     var item = snapshot.toObject(userDTO::class.java)
                     if (item != null) {
-                        if(item.Name?.contains(searchuserinfo) == true){
+                        if(item.Name?.contains(searchuserinfo) == true && checkuser != snapshot.id){
                             userArr.add(item!!) // 이름 ( doc.name)
                             userList.add(snapshot.id) // id값 ( 이메일 )
                         }
