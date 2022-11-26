@@ -44,6 +44,7 @@ class PostActivity : AppCompatActivity() {
 
 
             finish()//메인(홈)으로 돌아감
+
         }
 
         binding.buttonCancel.setOnClickListener {

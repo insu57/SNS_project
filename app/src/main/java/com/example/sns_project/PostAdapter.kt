@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.databinding.ItemsBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -78,6 +80,16 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
         val storageReference = storage.reference
         val imageRef = storage.getReferenceFromUrl(item.imagePath)
         val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${item.userMail}/${item.userMail}")
+        val myMail = Firebase.auth.currentUser?.email
+
+        if(item.userMail == myMail){
+            holder.binding.buttonDelete.visibility = View.VISIBLE
+            println("button  VISIBLE")
+        }
+        holder.binding.buttonDelete.setOnClickListener {
+            commentsCollectionRef.document(item.id).delete().addOnSuccessListener { updateList(itemList) }
+        }
+
 
         holder.binding.textMail.text = item.userMail
         holder.binding.textName.text = item.name
