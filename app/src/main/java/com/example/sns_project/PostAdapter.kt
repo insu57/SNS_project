@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.example.sns_project.databinding.ItemsBinding
@@ -20,6 +21,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.google.firebase.storage.ktx.storage
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 data class Items(
     val id: String, val name: String, val userMail: String,
@@ -94,7 +98,9 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
             println("button  VISIBLE")
         }
         holder.binding.buttonDelete.setOnClickListener {
-            userPostCollectionRef.document(item.id).delete().addOnSuccessListener { updateList(itemList) }
+            userPostCollectionRef.document(item.id).delete().addOnSuccessListener {
+                updateList(itemList)
+            }
         }
 
 
@@ -118,7 +124,6 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
 
         holder.binding.imageProfile.setOnClickListener{
             val intent = Intent(this.context,  MyProfileActivity::class.java)
-            intent.putExtra("contentUid", contentUidList[position])
             intent.putExtra("userMail",item.userMail)
             startActivity(this.context, intent, null)
         }
@@ -129,6 +134,7 @@ class PostAdapter(private val context: Context, private  var itemList: List<Item
 
 
     }
+
 
 
     override fun getItemCount(): Int {

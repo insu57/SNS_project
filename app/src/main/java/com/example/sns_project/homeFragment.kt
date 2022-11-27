@@ -9,6 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet.Layout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
@@ -21,6 +23,11 @@ import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
+import kotlin.concurrent.scheduleAtFixedRate
+import kotlin.concurrent.timer
 
 class homeFragment : Fragment(R.layout.fragment_home) {
 
@@ -41,13 +48,12 @@ class homeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
-
         //val binding = FragmentHomeBinding.bind(view)
         binding = FragmentHomeBinding.bind(view)
 
         binding.buttonPost.setOnClickListener {
-            startActivity(Intent(activity,PostActivity::class.java)) //버튼클릭 시 포스트로 이동
+
+            startActivity(Intent(activity,PostActivity::class.java))//버튼클릭 시 포스트로 이동
 
         }
 
@@ -58,17 +64,31 @@ class homeFragment : Fragment(R.layout.fragment_home) {
         //DB에서 가져와서 리사이클러뷰에 표시
 
         binding.recyclerView.layoutManager = LinearLayoutManager(context)
-        //binding.recyclerView.adapter = PostAdapter
         adapter = context?.let { PostAdapter(it, emptyList()) }
         binding.recyclerView.adapter =adapter
 
+        binding.button.setOnClickListener {
+            updateList()
+        }
+
         updateList()
+
+
+
+
     }
 
+    override fun onResume() {
+            super.onResume()
+            Timer().schedule(1000){
+                updateList()
+            }
+        }
 
 
 
-    private fun updateList(){
+
+    fun updateList(){
         var userArr: ArrayList<userDTO> = arrayListOf() // 비공개 리스트
         var userList: ArrayList<String> = arrayListOf() // 비공개 email
         var userArr2: ArrayList<userDTO> = arrayListOf() // 친구공개일때 못보는 리스트

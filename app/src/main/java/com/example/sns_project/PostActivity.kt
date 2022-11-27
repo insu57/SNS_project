@@ -1,11 +1,15 @@
 package com.example.sns_project
 
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.example.sns_project.databinding.ActivityPostBinding
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -13,6 +17,7 @@ import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import kotlinx.android.synthetic.main.activity_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -42,17 +47,20 @@ class PostActivity : AppCompatActivity() {
             uploadImage()//이미지 업로드 + DB 업로드
 
 
-
             finish()//메인(홈)으로 돌아감
+
 
         }
 
         binding.buttonCancel.setOnClickListener {
 
             finish()//메인(홈)으로 돌아감
+
         }
 
     }
+
+
 
     private fun openGallery() {
         val loadImage = registerForActivityResult(ActivityResultContracts.GetContent(),

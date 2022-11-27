@@ -55,6 +55,7 @@ class settingFragment : Fragment(R.layout.fragment_setting) {
             val intent = Intent(this.context,  MyProfileActivity::class.java)
             intent.putExtra("userMail", mail)
             startActivity(intent)
+
         }
 
 
@@ -77,6 +78,13 @@ class settingFragment : Fragment(R.layout.fragment_setting) {
 
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_setting, container, false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val mail = Firebase.auth.currentUser?.email
+        val profileImage = storage.getReferenceFromUrl("gs://sns-project-c4954.appspot.com/image/${mail}/${mail}")
+        displayImageRef(profileImage,binding.imageView3)
     }
 
     private fun displayImageRef(imageRef : StorageReference?, view: ImageView){
